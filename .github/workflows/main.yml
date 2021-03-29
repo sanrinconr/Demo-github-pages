@@ -1,22 +1,29 @@
-name: Build and Deploy
-on: [push]
+name: github-pages
+
+on:
+  push:
+    branches:
+      - master
+
 jobs:
-  build-and-deploy:
-    runs-on: ubuntu-latest
+  deploy:
+    runs-on: ubuntu-18.04
     steps:
-      - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+      - uses: actions/checkout@v2
 
-      - name: Install and Build 🔧 # This example project is built using npm and outputs the result to the 'build' folder. Replace with the commands required to build your project, or remove this step entirely if your site is pre-built.
-        run: |
-          npm install
-          npm run build
-
-      - name: Deploy 🚀
-        if: success()
-        uses: crazy-max/ghaction-github-pages@v2
+      - name: Setup Node
+        uses: actions/setup-node@v1
         with:
-          target_branch: gh-pages
-          build_dir: build
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          node-version: "12.x"
+      
+      - name: Installing Dependencies
+        run: npm run  install
+      
+      - name: Building App
+        run: npm run build
+
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: ./build
