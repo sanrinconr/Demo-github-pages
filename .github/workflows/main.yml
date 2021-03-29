@@ -17,7 +17,7 @@ jobs:
           node-version: "12.x"
       
       - name: Installing Dependencies
-        run: npm run  install
+        run: npm install
       
       - name: Building App
         run: npm run build
